@@ -27,6 +27,11 @@ Eigen::Matrix4f get_model_matrix(float rotation_angle)
     // Create the model matrix for rotating the triangle around the Z axis.
     // Then return it.
 
+    model << cos(rotation_angle),-sin(rotation_angle),0,0,
+             sin(rotation_angle),cos(rotation_angle) ,0,0,
+             0                  ,0                   ,1,0,
+             0                  ,0                   ,0,1;   
+
     return model;
 }
 
@@ -36,11 +41,20 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
     // Students will implement this function
 
     Eigen::Matrix4f projection = Eigen::Matrix4f::Identity();
-
+    zNear = -1.0f*zNear;
+    zFar = -1.0f*zFar;
     // TODO: Implement this function
     // Create the projection matrix for the given parameters.
     // Then return it.
-
+    float t,r;
+    t = zNear * tan(eye_fov/2);
+    //aspect_ratio = r / t
+    //l = -r, b = -t
+    r = t * aspect_ratio;
+    projection << 2*zNear/2*r,0,                0,                          0,
+                  0,          2*zNear/2*t,      0,                          0,
+                  0,          0,                (zFar+zNear)/(zNear-zFar),  2*zFar*zNear/(zFar-zNear),
+                  0,          0,                1,                          0;    
     return projection;
 }
 
