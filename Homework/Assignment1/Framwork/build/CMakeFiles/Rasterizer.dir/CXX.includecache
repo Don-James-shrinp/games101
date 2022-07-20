@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/代码框架/Triangle.cpp
+/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/Framwork/Triangle.cpp
 Triangle.hpp
-/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/代码框架/Triangle.hpp
+/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/Framwork/Triangle.hpp
 algorithm
 -
 array
@@ -16,15 +16,15 @@ array
 stdexcept
 -
 
-/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/代码框架/Triangle.hpp
+/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/Framwork/Triangle.hpp
 eigen3/Eigen/Eigen
 -
 
-/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/代码框架/main.cpp
+/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/Framwork/main.cpp
 Triangle.hpp
-/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/代码框架/Triangle.hpp
+/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/Framwork/Triangle.hpp
 rasterizer.hpp
-/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/代码框架/rasterizer.hpp
+/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/Framwork/rasterizer.hpp
 eigen3/Eigen/Eigen
 -
 iostream
@@ -32,11 +32,11 @@ iostream
 opencv2/opencv.hpp
 -
 
-/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/代码框架/rasterizer.cpp
+/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/Framwork/rasterizer.cpp
 algorithm
 -
 rasterizer.hpp
-/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/代码框架/rasterizer.hpp
+/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/Framwork/rasterizer.hpp
 opencv2/opencv.hpp
 -
 math.h
@@ -44,9 +44,9 @@ math.h
 stdexcept
 -
 
-/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/代码框架/rasterizer.hpp
+/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/Framwork/rasterizer.hpp
 Triangle.hpp
-/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/代码框架/Triangle.hpp
+/home/cs18/games101/GitRepositry/games101coursedesign/Homework/Assignment1/Framwork/Triangle.hpp
 algorithm
 -
 eigen3/Eigen/Eigen
