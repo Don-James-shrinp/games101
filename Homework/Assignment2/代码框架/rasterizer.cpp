@@ -43,22 +43,18 @@ auto to_vec4(const Eigen::Vector3f& v3, float w = 1.0f)
 static bool insideTriangle(int x, int y, const Vector3f* _v)
 {   
     // TODO : Implement this function to check if the point (x, y) is inside the triangle represented by _v[0], _v[1], _v[2]
-    Eigen::Vector2f P, AB, BC, CA, PA, PB, PC, A, B, C;
+    Eigen::Vector2f AB, BC, CA, AP, BP, CP, P;
     P << x, y;
-    A = { _v[0].x(),_v[0].y() };
-    B = { _v[1].x(),_v[1].y() };
-    C = { _v[2].x(),_v[2].y() };
-    AB = B - A;
-    BC = C - B;
-    CA = A - C;
-    PA = A - P;
-    PB = B - P;
-    PC = C - P;
-    float a, b, c; 
-    //  ¼ÆËã²æ»ý
-    a = AB[0] * PA[1] - AB[1] * PA[1];
-    b = BC[0] * PB[1] - BC[1] * PB[1];
-    c = CA[0] * PC[1] - CA[1] * PC[1];
+    AB = _v[1].head(2) - _v[0].head(2);
+    BC = _v[2].head(2) - _v[1].head(2);
+    CA = _v[0].head(2) - _v[2].head(2);
+    AP = P - _v[0].head(2);
+    BP = P - _v[1].head(2);
+    CP = P - _v[2].head(2);
+    float a, b, c;
+    a = AB[0] * AP[1] - AB[1] * AP[0];
+    b = BC[0] * BP[1] - BC[1] * BP[0];
+    c = CA[0] * CP[1] - CA[1] * CP[0];
     if ((a > 0 && b > 0 && c > 0) || (a < 0 && b < 0 && c < 0)) return true;
     return false;
 }
@@ -130,7 +126,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
     max_y = std::max(v[0].y(), std::max(v[1].y(), v[2].y()));
     min_y = std::min(v[0].y(), std::min(v[1].y(), v[2].y()));
     for(int x = min_x;x <= max_x;x++)
-        for (int y = min_y; y <= min_y; y++)
+        for (int y = min_y; y <= max_y; y++)
         {
             if (insideTriangle(x+0.5, y+0.5, t.v))
             {

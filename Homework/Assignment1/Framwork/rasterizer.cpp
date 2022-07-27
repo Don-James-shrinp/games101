@@ -34,7 +34,7 @@ void rst::rasterizer::draw_line(Eigen::Vector3f begin, Eigen::Vector3f end)
     auto x2 = end.x();
     auto y2 = end.y();
 
-    Eigen::Vector3f line_color = {255, 255, 255};
+    Eigen::Vector3f line_color = {219, 46, 46};
 
     int x,y,dx,dy,dx1,dy1,px,py,xe,ye,i;
 
