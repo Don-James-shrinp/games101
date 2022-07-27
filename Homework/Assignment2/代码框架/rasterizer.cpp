@@ -43,6 +43,24 @@ auto to_vec4(const Eigen::Vector3f& v3, float w = 1.0f)
 static bool insideTriangle(int x, int y, const Vector3f* _v)
 {   
     // TODO : Implement this function to check if the point (x, y) is inside the triangle represented by _v[0], _v[1], _v[2]
+    Eigen::Vector2f P, AB, BC, CA, PA, PB, PC, A, B, C;
+    P << x, y;
+    A = { _v[0].x(),_v[0].y() };
+    B = { _v[1].x(),_v[1].y() };
+    C = { _v[2].x(),_v[2].y() };
+    AB = B - A;
+    BC = C - B;
+    CA = A - C;
+    PA = A - P;
+    PB = B - P;
+    PC = C - P;
+    float a, b, c; 
+    //  计算叉积
+    a = AB[0] * PA[1] - AB[1] * PA[1];
+    b = BC[0] * PB[1] - BC[1] * PB[1];
+    c = CA[0] * PC[1] - CA[1] * PC[1];
+    if ((a > 0 && b > 0 && c > 0) || (a < 0 && b < 0 && c < 0)) return true;
+    return false;
 }
 
 static std::tuple<float, float, float> computeBarycentric2D(float x, float y, const Vector3f* v)
@@ -105,7 +123,32 @@ void rst::rasterizer::draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf
 //Screen space rasterization
 void rst::rasterizer::rasterize_triangle(const Triangle& t) {
     auto v = t.toVector4();
-    
+    int max_x, min_x, max_y, min_y;
+    //  Bouding Box(Find the boundary of x and y)
+    max_x = std::max(v[0].x(), std::max(v[1].x(), v[2].x()));
+    min_x = std::min(v[0].x(), std::min(v[1].x(), v[2].x()));
+    max_y = std::max(v[0].y(), std::max(v[1].y(), v[2].y()));
+    min_y = std::min(v[0].y(), std::min(v[1].y(), v[2].y()));
+    for(int x = min_x;x <= max_x;x++)
+        for (int y = min_y; y <= min_y; y++)
+        {
+            if (insideTriangle(x+0.5, y+0.5, t.v))
+            {
+                auto[alpha, beta, gamma] = computeBarycentric2D(x, y, t.v);
+                float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
+                float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
+                z_interpolated *= w_reciprocal;
+
+                int cur_index = get_index(x, y);
+                //更新Z-Buffer和Frame-Buffer
+                if (z_interpolated < depth_buf[cur_index])
+                {
+                    depth_buf[cur_index] = z_interpolated;
+                    Eigen::Vector3f vertex = { (float)x,(float)y,z_interpolated };
+                    set_pixel(vertex, t.getColor());
+                }
+            }
+        }
     // TODO : Find out the bounding box of current triangle.
     // iterate through the pixel and find if the current pixel is inside the triangle
 

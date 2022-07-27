@@ -39,22 +39,30 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
                                       float zNear, float zFar)
 {
     // Students will implement this function
-
-    Eigen::Matrix4f projection = Eigen::Matrix4f::Identity();
-    zNear = -1.0f*zNear;
-    zFar = -1.0f*zFar;
-    // TODO: Implement this function
-    // Create the projection matrix for the given parameters.
-    // Then return it.
-    float t,r;
-    t = zNear * tan(eye_fov/2);
-    //aspect_ratio = r / t
-    //l = -r, b = -t
-    r = t * aspect_ratio;
-    projection << 2*zNear/2*r,0,                0,                          0,
-                  0,          2*zNear/2*t,      0,                          0,
-                  0,          0,                (zFar+zNear)/(zNear-zFar),  2*zFar*zNear/(zFar-zNear),
-                  0,          0,                1,                          0;    
+    Eigen::Matrix4f projection;
+    Eigen::Matrix4f PersToOrtho, OrthoTranslate, OrthoScale, Ortho;
+    float n, f, height, width;
+    n = -1.0f * zNear;
+    f = -1.0f * zFar;
+    height = 2 * tan(eye_fov / 2) * zNear;
+    width = aspect_ratio * height;
+    OrthoTranslate <<
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, -(n + f) / 2,
+        0, 0, 0, 1;
+    OrthoScale <<
+        2 / width, 0, 0, 0,
+        0, 2 / height, 0, 0,
+        0, 0, 2 / (f - n), 0,
+        0, 0, 0, 1;
+    Ortho = OrthoScale * OrthoTranslate;
+    PersToOrtho <<
+        n, 0, 0, 0,
+        0, n, 0, 0,
+        0, 0, n + f, -n * f,
+        0, 0, 1, 0;
+    projection = Ortho * PersToOrtho;
     return projection;
 }
 
