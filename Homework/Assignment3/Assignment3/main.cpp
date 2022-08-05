@@ -162,15 +162,20 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload& payload)
     Eigen::Vector3f normal = payload.normal;
 
     Eigen::Vector3f result_color = {0, 0, 0};
+    result_color += ka.cwiseProduct(amb_light_intensity);
     for (auto& light : lights)
     {
         // TODO: For each light source in the code, calculate what the *ambient*, *diffuse*, and *specular* 
         // components are. Then, accumulate that result on the *result_color* object.
-        Eigen::Vector3f dis = { light.position[0] - point[0],light.position[1] - point[1],light.position[2] - point[2] };
-        float r = sqrt(pow(dis[0], 2) + pow(dis[1], 2) + pow(dis[2], 2));
-        Eigen::Vector3f diffuse = ks.cwiseProduct(light.intensity / (r * r)) * std::max(0.0f, normal.normalized().dot((light.position - point).normalized()));
-        Eigen::Vector3f h = light.position - point + eye_pos - point;
-        Eigen::Vector3f specular = ks.cwiseProduct(light.intensity / (r * r)) * pow(std::max(0.0f, h.normalized().dot(normal.normalized())), p);
+        Eigen::Vector3f l, v, h, n;
+        l = (light.position - point).normalized();
+        v = (eye_pos - point).normalized();
+        h = (l + v).normalized();
+        n = normal.normalized();
+        Eigen::Vector3f diffuse, specular;
+        float rsquare = (light.position - point).dot(light.position-point);
+        diffuse = kd.cwiseProduct(light.intensity/rsquare)*std::max(0.f,l.dot(n));
+        specular = ks.cwiseProduct(light.intensity / rsquare) * std::max(0.f, h.dot(n));
         result_color +=  diffuse + specular;
     }   
     result_color += ka.cwiseProduct(amb_light_intensity);
