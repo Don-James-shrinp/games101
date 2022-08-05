@@ -264,7 +264,6 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
     //    * v[i].w() is the vertex view space depth value z.
     //    * Z is interpolated view space depth for the current pixel
     //    * zp is depth between zNear and zFar, used for z-buffer
-    //  求包围盒
     auto v = t.toVector4();
     int x_max, x_min, y_max, y_min;
     x_max = std::max(v[0].x(), std::max(v[1].x(), v[2].x()));
@@ -275,19 +274,26 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
     {
         for (int y = y_min; y <= y_max; y++)
         {
-            auto [alpha, beta, gamma] = computeBarycentric2D(x, y, t.v);
+            auto [alpha, beta, gamma] = computeBarycentric2D(x, y, t.v);  //  获得重心坐标
              float Z = 1.0 / (alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
              float zp = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
              zp *= Z;
+
              int cur_index = get_index(x, y);
+ 
              if (depth_buf[cur_index] > zp)
              {
                  depth_buf[cur_index] = zp;
-                 auto interpolated_color;
-                 auto interpolated_normal;
-                 auto interpolated_texcoords;
-                 auto interpolated_shadingcoords;
-                 fragment_shader_payload payload
+                 //  get color
+                 auto interpolated_color = interpolate(alpha, beta, gamma, t.color[0], t.color[1], t.color[2], 1.0f);
+                 auto interpolated_normal = interpolate(alpha, beta, gamma, t.normal[0], t.normal[1], t.normal[2], 1.0f);
+                 auto interpolated_texcoords = interpolate(alpha, beta, gamma, t.tex_coords[0], t.tex_coords[1], t.tex_coords[2], 1.0f);
+                 auto interpolated_shadingcoords = interpolate(alpha, beta, gamma, view_pos[0], view_pos[1], view_pos[2], 1.0f);
+                 fragment_shader_payload payload(interpolated_color, interpolated_normal.normalized(), interpolated_texcoords, texture ? &*texture : nullptr);
+                 payload.view_pos = interpolated_shadingcoords;
+                 auto pixel_color = fragment_shader(payload);
+                 Eigen::Vector2d point = { x,y };
+                 set_pixel(point, pixel_color);
              }
         }
     }
