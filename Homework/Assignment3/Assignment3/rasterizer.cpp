@@ -284,9 +284,10 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
              {
                  depth_buf[cur_index] = zp;
                  auto interpolated_color;
-                 auto interpolated_normal
-                 auto interpolated_texcoords
-                 auto interpolated_shadingcoords
+                 auto interpolated_normal;
+                 auto interpolated_texcoords;
+                 auto interpolated_shadingcoords;
+                 fragment_shader_payload payload
              }
         }
     }
