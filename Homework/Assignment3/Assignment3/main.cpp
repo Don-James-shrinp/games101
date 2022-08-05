@@ -169,10 +169,10 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload& payload)
         Eigen::Vector3f dis = { light.position[0] - point[0],light.position[1] - point[1],light.position[2] - point[2] };
         float r = sqrt(pow(dis[0], 2) + pow(dis[1], 2) + pow(dis[2], 2));
         Eigen::Vector3f ambient = ka.cwiseProduct(amb_light_intensity);  //  对应位置相乘
-        Eigen::Vector3f diffuse = ks.cwiseProduct(light.intensity / (r * r)) * std::max(0.0f, normal.normalized().dot((light.position - point).normalized());
+        Eigen::Vector3f diffuse = ks.cwiseProduct(light.intensity / (r * r)) * std::max(0.0f, normal.normalized().dot((light.position - point).normalized()));
         Eigen::Vector3f h = light.position - point + eye_pos - point;
         h.normalize();
-        Eigen::Vector3f specular = ks.cwiseProduct(light.intensity / (r * r)) * std::max(0.0f, h.dot(normal.normalized()));
+        Eigen::Vector3f specular = ks.cwiseProduct(light.intensity / (r * r)) * pow(std::max(0.0f, h.dot(normal.normalized())),p);
         result_color += ambient + diffuse + specular;
     }   
 
