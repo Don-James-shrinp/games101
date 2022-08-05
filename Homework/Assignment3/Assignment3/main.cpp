@@ -67,7 +67,7 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float z
     Orthor2 <<
         2/width, 0, 0, 0,
         0, 2/height, 0, 0,
-        0, 0, 2 / abs(f - n), 0,
+        0, 0, 2 / (f - n), 0,
         0, 0, 0, 1;
     Orthor = Orthor2 * Orthor1;
     Project = Orthor * PerstoOrthor;
