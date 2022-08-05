@@ -51,7 +51,7 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float z
 {
     // TODO: Use the same projection matrix from the previous assignments
     Eigen::Matrix4f Orthor1, Orthor2, Orthor, PerstoOrthor,Project;
-    float n = -zNear, f = -zFar, width, height;
+    float n = zNear, f = zFar, width, height;
     height = 2 * tan(eye_fov / 2) * zNear;
     width = aspect_ratio * height;
     PerstoOrthor <<
