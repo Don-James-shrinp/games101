@@ -288,8 +288,8 @@ Eigen::Vector3f bump_fragment_shader(const fragment_shader_payload& payload)
     auto v = payload.tex_coords[1];
     auto w = payload.texture->width;
     auto h = payload.texture->height;
-    auto du = kh * kn * (payload.texture->getColor((u + 1) / w, v).norm() - payload.texture->getColor(u, v).norm());
-    auto dv = kh * kn * (payload.texture->getColor(u, (v + 1) / h).norm() - payload.texture->getColor(u, v).norm());
+    auto du = kh * kn * (payload.texture->getColor((u + 1) / (float)w, v).norm() - payload.texture->getColor(u, v).norm());
+    auto dv = kh * kn * (payload.texture->getColor(u, (v + 1) / (float)h).norm() - payload.texture->getColor(u, v).norm());
     Eigen::Vector3f ln = { -du,-dv,(l1.intensity + l2.intensity).norm()};
 
     n = (TBN * ln).normalized();
