@@ -294,7 +294,7 @@ Eigen::Vector3f bump_fragment_shader(const fragment_shader_payload& payload)
 
     n = (TBN * ln).normalized();
     Eigen::Vector3f result_color = {0, 0, 0};
-    result_color = normal;
+    result_color = n;
 
     return result_color * 255.f;
 }
