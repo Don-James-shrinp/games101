@@ -288,15 +288,16 @@ Eigen::Vector3f bump_fragment_shader(const fragment_shader_payload& payload)
     // dV = kh * kn * (h(u,v+1/h)-h(u,v))
     // Vector ln = (-dU, -dV, 1)
     // Normal n = normalize(TBN * ln)
+    normal = normal.normalized();
     float x, y, z;
     x = normal[0], y = normal[1], z = normal[2];
     Eigen::Vector3f t = { x * y / sqrt(x * x + z * z), sqrt(x * x + z * z), z * y / sqrt(x * x + z * z) };
     Eigen::Vector3f b = normal.cross(t);
     Eigen::Matrix3f TBN;
     TBN <<
-        t[0], t[1], t[2],
-        b[0], b[1], b[2],
-        normal[0], normal[1], normal[2];
+        t[0], b[0], normal[0],
+        t[1], b[1], normal[1],
+        t[2], b[2], normal[2];
     auto u = payload.tex_coords[0];
     auto v = payload.tex_coords[1];
     auto w = payload.texture->width;
