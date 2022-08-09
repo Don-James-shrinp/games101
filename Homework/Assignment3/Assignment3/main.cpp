@@ -245,7 +245,7 @@ Eigen::Vector3f displacement_fragment_shader(const fragment_shader_payload& payl
     Eigen::Vector3f ln = {-du,-dv,1};
     point = point + kn * normal * payload.texture->getColor(u,v).norm();
     Eigen::Vector3f result_color = {0, 0, 0};
-    result_color += ka.cwiseProduct(amb_light_intensity);
+    result_color += 2.f*ka.cwiseProduct(amb_light_intensity);
     for (auto& light : lights)
     {
         // TODO: For each light source in the code, calculate what the *ambient*, *diffuse*, and *specular* 
