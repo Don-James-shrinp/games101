@@ -173,7 +173,6 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload& payload)
     Eigen::Vector3f normal = payload.normal;
 
     Eigen::Vector3f result_color = {0, 0, 0};
-    result_color += ka.cwiseProduct(amb_light_intensity);
     for (auto& light : lights)
     {
         // TODO: For each light source in the code, calculate what the *ambient*, *diffuse*, and *specular* 
@@ -302,14 +301,29 @@ Eigen::Vector3f bump_fragment_shader(const fragment_shader_payload& payload)
     auto v = payload.tex_coords[1];
     auto w = payload.texture->width;
     auto h = payload.texture->height;
-    auto du = kh * kn * (payload.texture->getColor((u + 1.0) / (float)w, v).norm() - payload.texture->getColor(u, v).norm());
-    auto dv = kh * kn * (payload.texture->getColor(u, (v + 1.0) / (float)h).norm() - payload.texture->getColor(u, v).norm());
+    auto du = kh * kn * (payload.texture->getColor((u + 1.0) / (float)w, v) - payload.texture->getColor(u, v)).norm();
+    auto dv = kh * kn * (payload.texture->getColor(u, (v + 1.0) / (float)h) - payload.texture->getColor(u, v)).norm();
     Eigen::Vector3f ln = { -du,-dv,1.f};
 
     normal = (TBN * ln).normalized();
     Eigen::Vector3f result_color = {0, 0, 0};
     result_color = normal;
-
+    for (auto& light : lights)
+    {
+        // TODO: For each light source in the code, calculate what the *ambient*, *diffuse*, and *specular* 
+        // components are. Then, accumulate that result on the *result_color* object.
+        Eigen::Vector3f l, v, h, n;
+        l = (light.position - point).normalized();  //  化成单位向量
+        v = (eye_pos - point).normalized();
+        h = (l + v).normalized();
+        n = normal.normalized();
+        Eigen::Vector3f diffuse, specular;
+        float rsquare = (light.position - point).dot(light.position - point);
+        diffuse = kd.cwiseProduct(light.intensity / rsquare) * std::max(0.f, l.dot(n));  //  对应位置相乘，结果为向量
+        specular = ks.cwiseProduct(light.intensity / rsquare) * pow(std::max(0.f, h.dot(n)), p);
+        result_color += diffuse + specular;
+    }
+    result_color += ka.cwiseProduct(amb_light_intensity);
     return result_color * 255.f;
 }
 
