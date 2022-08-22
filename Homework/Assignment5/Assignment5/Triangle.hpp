@@ -24,7 +24,7 @@ public:
             if (vertsIndex[i] > maxIndex)
                 maxIndex = vertsIndex[i];
         maxIndex += 1;
-        vertices = std::unique_ptr<Vector3f[]>(new Vector3f[maxIndex]);
+        vertices = std::unique_ptr<Vector3f[]>(new Vector3f[maxIndex] );
         memcpy(vertices.get(), verts, sizeof(Vector3f) * maxIndex);
         vertexIndex = std::unique_ptr<uint32_t[]>(new uint32_t[numTris * 3]);
         memcpy(vertexIndex.get(), vertsIndex, sizeof(uint32_t) * numTris * 3);
