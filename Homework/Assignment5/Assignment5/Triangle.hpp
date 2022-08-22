@@ -8,9 +8,27 @@ bool rayTriangleIntersect(const Vector3f& v0, const Vector3f& v1, const Vector3f
                           const Vector3f& dir, float& tnear, float& u, float& v)
 {
     // TODO: Implement this function that tests whether the triangle
-    // that's specified bt v0, v1 and v2 intersects with the ray (whose
+    // that's specified by v0, v1 and v2 intersects with the ray (whose
     // origin is *orig* and direction is *dir*)
     // Also don't forget to update tnear, u and v.
+    //  先求光线与三角形所在平面是否有交点，然后判断三角形是否在三角形内
+    Vector3f E1, E2, E3, S, S1, S2;
+    float  t, b1, b2;
+    E1 = v1 - v0;
+    E2 = v2 - v0;
+    S = orig - v0;
+    S1 = crossProduct(dir, E2);
+    S2 = crossProduct(S, E1);
+    t = dotProduct(S2, E2) / dotProduct(S1, E1);
+    b1 = dotProduct(S1, S) / dotProduct(S1, E1);
+    b2 = dotProduct(S2,dir) / dotProduct(S1, E1);
+    if (t > 0 && b1 > 0 && b2 > 0 && (1 - b1 - b2) > 0)
+    {
+        tnear = t;
+        u = b1;
+        v = b2;
+        return true;
+    }
     return false;
 }
 
