@@ -22,6 +22,7 @@ bool rayTriangleIntersect(const Vector3f& v0, const Vector3f& v1, const Vector3f
     t = dotProduct(S2, E2) / dotProduct(S1, E1);
     b1 = dotProduct(S1, S) / dotProduct(S1, E1);
     b2 = dotProduct(S2,dir) / dotProduct(S1, E1);
+    std::cout << t << b1 << b2 << std::endl;
     if (t > 0 && b1 > 0 && b2 > 0 && (1 - b1 - b2) > 0)
     {
         tnear = t;
