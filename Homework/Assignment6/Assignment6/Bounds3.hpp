@@ -96,7 +96,20 @@ inline bool Bounds3::IntersectP(const Ray& ray, const Vector3f& invDir,
     // invDir: ray direction(x,y,z), invDir=(1.0/x,1.0/y,1.0/z), use this because Multiply is faster than Division
     // dirIsNeg: ray direction(x,y,z), dirIsNeg=[int(x>0),int(y>0),int(z>0)], use this to simplify your logic
     // TODO test if ray bound intersects
-    
+    float tEnter = -std::numeric_limits<float>::infinity();
+    float tExit = std::numeric_limits<float>::infinity();
+    for (int i = 0; i < 3; i++)
+    {
+        float tmin = (pMin[i] - ray.origin[i]) * invDir[i];  //  计算进入对面(slab)的时间
+        float tmax = (pMax[i] - ray.origin[i]) * invDir[i];
+        if (!dirIsNeg[i])
+        {
+            std::swap(tmin, tmax);
+        }
+        tEnter = std::max(tEnter, tmin);
+        tExit = std::min(tExit, tmax);
+    }
+    return tEnter < tExit && tExit >= 0;
 }
 
 inline Bounds3 Union(const Bounds3& b1, const Bounds3& b2)
