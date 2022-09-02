@@ -17,6 +17,7 @@ class Scene
 {
 public:
     // setting up options
+    float epsilon = 0.00001;
     int width = 1280;
     int height = 960;
     double fov = 90;

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "BVH.hpp"
 #include "Intersection.hpp"
@@ -198,7 +198,6 @@ public:
 
     Material* m;
 };
-
 inline bool Triangle::intersect(const Ray& ray) { return true; }
 inline bool Triangle::intersect(const Ray& ray, float& tnear,
                                 uint32_t& index) const
@@ -212,7 +211,7 @@ inline Intersection Triangle::getIntersection(Ray ray)
 {
     Intersection inter;
 
-    if (dotProduct(ray.direction, normal) > 0)
+    if (dotProduct(ray.direction, normal) > 0)  //  向背离的平面的方向射
         return inter;
     double u, v, t_tmp = 0;
     Vector3f pvec = crossProduct(ray.direction, e2);
@@ -232,10 +231,12 @@ inline Intersection Triangle::getIntersection(Ray ray)
     t_tmp = dotProduct(e2, qvec) * det_inv;
 
     // TODO find ray triangle intersection
-
-
-
-
+    inter.happened = true;
+    inter.coords = ray(t_tmp);
+    inter.normal = normal;
+    inter.distance = t_tmp;
+    inter.m = m;
+    inter.obj = this;
     return inter;
 }
 
