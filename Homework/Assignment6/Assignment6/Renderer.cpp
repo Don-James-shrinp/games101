@@ -44,7 +44,7 @@ void Renderer::Render(const Scene& scene)
         UpdateProgress(j / (float)scene.height);
     }
     UpdateProgress(1.f);
-
+    std::cout << "Arrive Here!\n";
     // save framebuffer to file
     FILE* fp = fopen("binary.ppm", "wb");
     (void)fprintf(fp, "P6\n%d %d\n255\n", scene.width, scene.height);
